@@ -356,7 +356,6 @@ void main_menu(My_List::MyList* list_of_lists)
 				}
 
 				My_List::removeList(current); count--;
-				std::cout << "Заданный список удален.\n";
 			}
 			else
 			{
