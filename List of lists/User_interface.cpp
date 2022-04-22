@@ -1,7 +1,6 @@
 #include "user_interface.h"
 
-
-int getValue(int condition, const char* string)
+int getValue(int condition, const char* string, int k)
 {
 	while (true)													// цикл продолжается до тех пор, пока пользователь не введет корректное значение
 	{
@@ -19,6 +18,12 @@ int getValue(int condition, const char* string)
 		{
 			switch (condition)
 			{
+			case Variable_options:
+				if ((a > 0) && (a < k)) {	return a;	}
+				std::cout << "Вы должны ввести натуральное число меньше " << k << std::endl;
+				std::cin.ignore(32767, '\n');						// и удаляем значения предыдущего ввода из входного буфера
+				continue;
+
 			case Natural_number:
 				if (a > 0) { return a; }
 
@@ -34,11 +39,11 @@ int getValue(int condition, const char* string)
 				std::cin.ignore(32767, '\n');						// и удаляем значения предыдущего ввода из входного буфера
 				continue;
 
-			case Main_menu_Commands:
+			case Menu_Commands:
 
-				if (((int)a > 0) && ((int)a < 9)) { return a; }
+				if (((int)a > 0) && ((int)a < k)) { return a; }
 
-				std::cout << "У меню всего 7 функций! Повторите ввод: ";
+				std::cout << "У меню всего " << k-1 <<" функций!Повторите ввод : ";
 				std::cin.ignore(32767, '\n');						// и удаляем значения предыдущего ввода из входного буфера
 				continue;
 
@@ -50,8 +55,6 @@ int getValue(int condition, const char* string)
 
 	}
 }
-
-
 
 void show_menu()
 {
@@ -71,8 +74,8 @@ void write_author()
 
 int aboutDirection()
 {
-	std::cout << "Вы хотите искать данные в прямом или обратном направлении? 0 - в прямом, 1 - в обратном направлении\nВведите: ";
-	int left = getValue(O_Or_1, "Вы хотите искать данные в прямом или обратном направлении? 0 - в прямом, 1 - в обратном направлении\n Введите: ");
+	std::cout << "\tВы хотите искать данные в прямом или обратном направлении? 0 - в прямом, 1 - в обратном направлении\n\t Введите: ";
+	int left = getValue(O_Or_1, "\tВы хотите искать данные в прямом или обратном направлении? 0 - в прямом, 1 - в обратном направлении\n \tВведите: ", 0);
 
 	return left;
 }
@@ -105,20 +108,20 @@ My_List::Node* my_search(My_List::Node* list, int& find_data, int& left)
 
 void add_element(My_List::Node* list, My_List::Node* current, int& temp_data, int& left)
 {
-	std::cout << "Введите элемент, от которого мы будем отталкиваться: ";
-	int find_data = getValue(Natural_number, "Введите элемент, от которого мы будем отталкиваться: ");
+	std::cout << "\tВведите элемент, от которого мы будем отталкиваться: ";
+	int find_data = getValue(Natural_number, "\tВведите элемент, от которого мы будем отталкиваться: ", 0);
 	current = my_search(list, find_data, left);
 
 	if (current)
 	{
-		std::cout << "Вы хотите вставить данные до заданного элемента или после? 0 - до, 1 - после\nВведите: ";
-		int before = getValue(O_Or_1, "Вы хотите вставить данные до заданного элемента или после? 0 - до, 1 - после\nВведите: ");
+		std::cout << "\tВы хотите вставить данные до заданного элемента или после? 0 - до, 1 - после\n\tВведите: ";
+		int before = getValue(O_Or_1, "\tВы хотите вставить данные до заданного элемента или после? 0 - до, 1 - после\n\tВведите: ", 0);
 
 		My_List::add(current, temp_data, before);
 	}
 	else
 	{
-		std::cout << "Добавление невозможно, т.к элемент с такими данными не найден\n";
+		std::cout << "\tДобавление невозможно, т.к элемент с такими данными не найден\n";
 	}
 
 
@@ -126,8 +129,8 @@ void add_element(My_List::Node* list, My_List::Node* current, int& temp_data, in
 
 void delete_element(My_List::Node* list, My_List::Node* current, int& find_data, int& left)
 {
-	std::cout << "Введите данные, которые хотели бы удалить: ";
-	find_data = getValue(1, "Введите данные: ");
+	std::cout << "\tВведите данные, которые хотели бы удалить: ";
+	find_data = getValue(1, "\tВведите данные: ", 0);
 
 	current = my_search(list, find_data, left);
 
@@ -137,7 +140,7 @@ void delete_element(My_List::Node* list, My_List::Node* current, int& find_data,
 	}
 	else
 	{
-		std::cout << "Удаление невозможно, т.к элемент с такими данными не найден\n";
+		std::cout << "\tУдаление невозможно, т.к элемент с такими данными не найден\n";
 	}
 
 }
@@ -146,11 +149,13 @@ void menu(My_List::Node* list)
 {
 	int user_choice = 0;
 
-
 	show_menu();
 
 	while (user_choice != To_main_menu)
 	{
+		std::cout << "\n\tВыберите команду: ";
+		user_choice = getValue(Menu_Commands, "\tВыберите команду: ", Menu_Commands);
+
 		int temp_data = -1;
 		int left = -1;
 		My_List::Node* current = nullptr;
@@ -159,8 +164,8 @@ void menu(My_List::Node* list)
 		{
 		case Add_new_element:
 
-			std::cout << "Введите, данные которые хотите добавить: ";
-			temp_data = getValue(1, "Введите данные: ");
+			std::cout << "\tВведите, данные которые хотите добавить: ";
+			temp_data = getValue(1, "\tВведите данные: ", 0);
 
 			if (My_List::empty(list))
 			{
@@ -176,7 +181,7 @@ void menu(My_List::Node* list)
 
 			if (My_List::empty(list))
 			{
-				std::cout << "Список пустой!\n";
+				std::cout << "\tСписок пустой!\n";
 			}
 			else
 			{
@@ -189,14 +194,14 @@ void menu(My_List::Node* list)
 
 			if (My_List::empty(list))
 			{
-				std::cout << "Список пустой!\n"; break;
+				std::cout << "\tСписок пустой!\n"; break;
 			}
 
 			left = aboutDirection();
 
 			if (left)
 			{
-				My_List::show(list, "Проход списка в обратном направлении", [](My_List::Node* current)
+				My_List::show(list, "\tПроход списка в обратном направлении", [](My_List::Node* current)
 					{
 						return current->pPrevious;
 					}
@@ -204,7 +209,7 @@ void menu(My_List::Node* list)
 			}
 			else
 			{
-				My_List::show(list, "Проход списка в прямом направлении", [](My_List::Node* current)
+				My_List::show(list, "\tПроход списка в прямом направлении", [](My_List::Node* current)
 					{
 						return current->pNext;
 					}
@@ -215,14 +220,11 @@ void menu(My_List::Node* list)
 		case Show_menu:
 
 			std::cout << "\n\n";
-			show_menu();
 			break;
 
 		default:
 			break;
 		}
-		std::cout << "\nВыберите команду: ";
-		user_choice = getValue(Menu_Commands, "Выберите команду: ");
 	}
 }
 
@@ -239,9 +241,10 @@ void show_main_menu()
 		<< "3. Удаление списка\n"
 		<< "4. Выбрать список для работы\n"
 		<< "5. Показать содержимое всех списков\n"
-		<< "6. Показать главное меню\n"
-		<< "7. Вывести автора программы\n"
-		<< "\n8. Завершение работы\n\n";
+		<< "6. Показать содержимое списка списков с первыми их данными\n"
+		<< "7. Показать главное меню\n"
+		<< "8. Вывести автора программы\n"
+		<< "\n9. Завершение работы\n\n";
 }
 
 void show_number_of_lists(My_List::MyList* list_of_lists)
@@ -270,12 +273,12 @@ void show_number_of_lists(My_List::MyList* list_of_lists)
 	}
 }
 
-void init(My_List::MyList* list_of_lists, int& user_choice, bool& complete_init)
+void init(My_List::MyList*& list_of_lists, int& user_choice, bool& complete_init)
 {
 	while ((!complete_init) && (user_choice != Exit))
 	{
 		std::cout << "Выберите команду: ";
-		user_choice = getValue(Menu_Commands, "Выберите команду: ");
+		user_choice = getValue(Menu_Commands, "Выберите команду: ", Main_menu_Commands);
 
 		if (user_choice == Init)
 		{
@@ -289,7 +292,6 @@ void init(My_List::MyList* list_of_lists, int& user_choice, bool& complete_init)
 		}
 	}
 }
-
 
 void main_menu(My_List::MyList* list_of_lists)
 {
@@ -305,21 +307,20 @@ void main_menu(My_List::MyList* list_of_lists)
 	{
 		int temp_data = -1;
 		int left = -1;
-		My_List::MyList* current = nullptr;
+		My_List::MyList* current = list_of_lists;
+
+		std::cout << "\nВыберите команду: ";
+		user_choice = getValue(Menu_Commands, "Выберите команду: ", Main_menu_Commands);
 
 		switch (user_choice)
 		{
 		case Add_new_list:
 
-			current = list_of_lists;
-
 			if (count)
 			{
 				show_number_of_lists(list_of_lists);
-				std::cout << "На какую позицию нужно поставить список: (если будет введено число, превышающее количество списоков, новый список будет добавлен в конец\n";
-				temp_data = getValue(1, "Введите данные: ");
-
-				current = list_of_lists;
+				std::cout << "На какую позицию нужно поставить список: \n";
+				temp_data = getValue(Variable_options, "Введите данные: ", count+2);
 
 				for (size_t i = 0; i < count; i++)
 				{
@@ -332,46 +333,74 @@ void main_menu(My_List::MyList* list_of_lists)
 			}
 
 			My_List::addList(current); count++;
+			std::cout << "Добавление выполнено успешно!\n";
+
 			break;
 
 		case Delete_list:
 
-			if (My_List::empty(list))
+			if (count)
 			{
-				std::cout << "Список пустой!\n";
+				show_number_of_lists(list_of_lists);
+				std::cout << "Какой список следует удалить?\n";
+				temp_data = getValue(Variable_options, "Введите данные: ", count + 1);
+
+
+				for (size_t i = 0; i < count; i++)
+				{
+					if (i == temp_data-1)
+					{
+						break;
+					}
+					current = current->pNext;
+				}
+
+				My_List::removeList(current); count--;
+				std::cout << "Заданный список удален.\n";
 			}
 			else
 			{
-				delete_element(list, current, temp_data, left);
+				std::cout << "Список пустой!\n";
 			}
+
 			break;
 
 		case Choise_list:
 
-			if (My_List::empty(list))
+			if (current = current->pNext)
 			{
-				std::cout << "Список пустой!\n";
+				show_number_of_lists(list_of_lists);
+				std::cout << "Выберите список для работы: \n";
+				temp_data = getValue(Variable_options, "Введите данные: ", count + 1);
+
+				for (size_t i = 0; i < count; i++)
+				{
+					if (i == temp_data - 1)
+					{
+						break;
+					}
+					current = current->pNext;
+				}
+				menu(current->data);
+				std::cout << "Чтобы вывести меню, введите 7\n";
 			}
 			else
 			{
-				delete_element(list, current, temp_data, left);
+				std::cout << "Список пустой!\n";
 			}
+
+
+
 			break;
 
 
 		case Show_all_lists:
 
-
-			if (My_List::empty(list))
-			{
-				std::cout << "Список пустой!\n"; break;
-			}
-
 			left = aboutDirection();
 
 			if (left)
 			{
-				My_List::show(list, "Проход списка в обратном направлении", [](My_List::Node* current)
+				My_List::show_all_lists(list_of_lists, [](My_List::Node* current)
 					{
 						return current->pPrevious;
 					}
@@ -379,12 +408,13 @@ void main_menu(My_List::MyList* list_of_lists)
 			}
 			else
 			{
-				My_List::show(list, "Проход списка в прямом направлении", [](My_List::Node* current)
+				My_List::show_all_lists(list_of_lists, [](My_List::Node* current)
 					{
 						return current->pNext;
 					}
 				);
 			}
+
 			break;
 			
 		case Show_number_of_lists:
@@ -406,8 +436,6 @@ void main_menu(My_List::MyList* list_of_lists)
 		default:
 			break;
 		}
-		std::cout << "\nВыберите команду: ";
-		user_choice = getValue(Menu_Commands, "Выберите команду: ");
 	}
 	if (complete_init)
 	{

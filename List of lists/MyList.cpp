@@ -36,9 +36,10 @@ void My_List::show_all_lists(MyList* head, const std::function<Node* (Node*)>& f
 	int number = 1;
 	while (head)
 	{
+		std::cout << std::endl;
 		std::cout << number++ << "-й список:\n";
 		show(head->data, "", fcn);
-		std::cout << std::endl << std::endl;
+		head = head->pNext;
 	}
 
 }
@@ -79,6 +80,12 @@ void My_List::show(Node* pHead, std::string message, const std::function<Node* (
 {
 	Node* start = fcn(pHead);
 	int number = 1;
+
+	if (start == pHead)
+	{
+		std::cout << "\tСписок пустой!\n";
+	}
+
 	while (start != pHead)
 	{
 		std::cout << "\t" << number++ << "-ый элемент " << message + " " << start->data << std::endl;
@@ -101,7 +108,7 @@ Node* My_List::find(Node* pHead, int find_data, const std::function<Node* (Node*
 		number++;
 	} 
 
-	std::cout << "Не удалось найти элемент с заданными данными\n";
+	std::cout << "\t Не удалось найти элемент с заданными данными\n";
 	return nullptr;
 }
 
@@ -120,7 +127,7 @@ void My_List::add(Node* current, int data, bool before)
 	current->pNext->pPrevious = temp;
 	current->pNext = temp;
 
-	std::cout << "Добавление выполено успешно\n";
+	std::cout << "\tДобавление выполено успешно\n";
 }
 
 void My_List::remove(Node* current)
@@ -132,7 +139,7 @@ void My_List::remove(Node* current)
 
 	delete current;
 
-	std::cout << "Удаление произошло успешно\n";
+	std::cout << "\tУдаление произошло успешно\n";
 }
 
 void My_List::clean_memory_nodes(Node* list)
