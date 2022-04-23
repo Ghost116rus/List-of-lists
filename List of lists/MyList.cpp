@@ -2,12 +2,15 @@
 
 using namespace My_List;
 
+int gl_id = 0;
+
 
 MyList* My_List::createList()
 {
 	MyList* temp = new MyList;
 	temp->pNext = nullptr;
 	temp->data = nullptr;
+	temp->id = gl_id++;
 
 	return temp;
 }
@@ -17,6 +20,7 @@ void My_List::addList(MyList* current)
 	MyList* list = new MyList();
 	list->pNext = current->pNext;
 	list->data = create();
+	list->id = gl_id++;
 	current->pNext = list;
 }
 
@@ -37,7 +41,7 @@ void My_List::show_all_lists(MyList* head, const std::function<Node* (Node*)>& f
 	while (head)
 	{
 		std::cout << std::endl;
-		std::cout << number++ << "-й список:\n";
+		std::cout << number++ << "-й список:" << " (id = " << head->id << ")" << "\n";
 		show(head->data, "", fcn);
 		head = head->pNext;
 	}
@@ -60,7 +64,6 @@ void My_List::clean_memory(MyList* head)
 }
 
 
-
 Node* My_List::create()
 {
 	Node* Temp = new Node();
@@ -69,7 +72,6 @@ Node* My_List::create()
 
 	return Temp;	
 }
-
 
 bool My_List::empty(Node* head)
 {

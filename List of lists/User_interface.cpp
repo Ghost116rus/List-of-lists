@@ -230,9 +230,6 @@ void menu(My_List::Node* list)
 
 
 
-
-
-
 void show_main_menu()
 {
 	std::cout << "  Функционал программы:\n"
@@ -259,7 +256,7 @@ void show_number_of_lists(My_List::MyList* list_of_lists)
 
 	while (current)
 	{
-		std::cout << "Список №" << number++ << "\t";
+		std::cout << "Список №" << number++ << " (id = " << current->id << ")" << "\t";
 
 		if (My_List::empty(current->data))
 		{
