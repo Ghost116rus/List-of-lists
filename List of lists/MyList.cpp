@@ -2,7 +2,7 @@
 
 using namespace My_List;
 
-int gl_id = 0;
+
 
 
 MyList* My_List::createList()
@@ -10,7 +10,7 @@ MyList* My_List::createList()
 	MyList* temp = new MyList;
 	temp->pNext = nullptr;
 	temp->data = nullptr;
-	temp->id = gl_id++;
+
 
 	return temp;
 }
@@ -20,7 +20,9 @@ void My_List::addList(MyList* current)
 	MyList* list = new MyList();
 	list->pNext = current->pNext;
 	list->data = create();
-	list->id = gl_id++;
+	
+	std::cout << "Введите имя нового списка: "; std::cin >> list->name;
+
 	current->pNext = list;
 }
 
@@ -37,11 +39,10 @@ void My_List::removeList(MyList* previous)
 void My_List::show_all_lists(MyList* head, const std::function<Node* (Node*)>& fcn)
 {
 	head = head->pNext;
-	int number = 1;
 	while (head)
 	{
 		std::cout << std::endl;
-		std::cout << number++ << "-й список:" << " (id = " << head->id << ")" << "\n";
+		std::cout <<"Cписок: " <<  head->name  << "\n";
 		show(head->data, "", fcn);
 		head = head->pNext;
 	}

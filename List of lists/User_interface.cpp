@@ -218,7 +218,7 @@ void menu(My_List::Node* list)
 			break;
 
 		case Show_menu:
-
+			show_menu();
 			std::cout << "\n\n";
 			break;
 
@@ -256,7 +256,7 @@ void show_number_of_lists(My_List::MyList* list_of_lists)
 
 	while (current)
 	{
-		std::cout << "Список №" << number++ << " (id = " << current->id << ")" << "\t";
+		std::cout << "Cписок: " << current->name << "\t";
 
 		if (My_List::empty(current->data))
 		{
@@ -290,6 +290,32 @@ void init(My_List::MyList*& list_of_lists, int& user_choice, bool& complete_init
 	}
 }
 
+
+My_List::MyList* find(My_List::MyList* list_of_lists)
+{
+	show_number_of_lists(list_of_lists);
+	std::cout << "Введите имя списка, который нужно найти: ";
+	std::string name; std::cin >> name;
+
+	My_List::MyList* previous = list_of_lists;
+
+	while (previous)
+	{
+		if (previous->pNext)
+		{
+			if (previous->pNext->name == name)
+			{
+				return previous;
+			}
+		}
+		previous = previous->pNext;
+	}
+
+	return nullptr;
+}
+
+
+
 void main_menu(My_List::MyList* list_of_lists)
 {
 	int user_choice = 0;
@@ -315,20 +341,18 @@ void main_menu(My_List::MyList* list_of_lists)
 
 			if (count)
 			{
-				show_number_of_lists(list_of_lists);
-				std::cout << "На какую позицию нужно поставить список: \n";
-				temp_data = getValue(Variable_options, "Введите данные: ", count+2);
+				current = find(list_of_lists);
 
-				for (size_t i = 0; i < count; i++)
+				if (current)
 				{
-					if (i == temp_data - 1)
-					{
-						break;
-					}
-					current = current->pNext;
+					std::cout << "До или после заданного элемента? Введите: "; user_choice = getValue(O_Or_1, "", Main_menu_Commands);
+					if (user_choice) { current = current->pNext; }
+				}
+				else
+				{
+					std::cout << "Заданный элемент не найден!\n"; break;
 				}
 			}
-
 			My_List::addList(current); count++;
 			std::cout << "Добавление выполнено успешно!\n";
 
@@ -338,20 +362,7 @@ void main_menu(My_List::MyList* list_of_lists)
 
 			if (count)
 			{
-				show_number_of_lists(list_of_lists);
-				std::cout << "Какой список следует удалить?\n";
-				temp_data = getValue(Variable_options, "Введите данные: ", count + 1);
-
-
-				for (size_t i = 0; i < count; i++)
-				{
-					if (i == temp_data-1)
-					{
-						break;
-					}
-					current = current->pNext;
-				}
-
+				current = find(list_of_lists);
 				My_List::removeList(current); count--;
 			}
 			else
@@ -363,22 +374,18 @@ void main_menu(My_List::MyList* list_of_lists)
 
 		case Choise_list:
 
-			if (current = current->pNext)
+			if (count)
 			{
-				show_number_of_lists(list_of_lists);
-				std::cout << "Выберите список для работы: \n";
-				temp_data = getValue(Variable_options, "Введите данные: ", count + 1);
+				current = find(list_of_lists);
 
-				for (size_t i = 0; i < count; i++)
+				if (current)
 				{
-					if (i == temp_data - 1)
-					{
-						break;
-					}
 					current = current->pNext;
+					menu(current->data);
+					std::cout << "Чтобы вывести меню, введите 7\n";
 				}
-				menu(current->data);
-				std::cout << "Чтобы вывести меню, введите 7\n";
+				else { std::cout << "Заданный список не найден!\n"; }
+
 			}
 			else
 			{

@@ -17,7 +17,7 @@ namespace My_List
 	{
 		MyList* pNext;
 		Node* data;
-		int id;
+		std::string name;
 	};
 
 
